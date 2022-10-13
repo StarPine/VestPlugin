@@ -1,0 +1,27 @@
+plugins {
+    id 'groovy'
+    id 'maven'
+    id 'maven-publish'
+}
+dependencies {
+    implementation gradleApi()
+    implementation "com.android.tools.build:gradle:4.2.0"
+}
+
+publishing{
+    publications{
+        VestReplace(MavenPublication){
+            from components.java
+            groupId 'com.starpine' // groupId
+            artifactId 'vest' // artifactId
+            version '1.0.0' // 发布版本
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
