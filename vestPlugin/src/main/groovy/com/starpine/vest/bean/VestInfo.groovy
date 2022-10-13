@@ -1,4 +1,6 @@
-package com.starpine.vest.bean;
+package com.starpine.vest.bean
+
+import org.gradle.api.file.FileTree;
 
 /**
  * 描述：
@@ -12,4 +14,5 @@ class VestInfo {
     String needRenamePath
     String renameFilePath
     String renameMapping
+    FileTree fileTree
 }

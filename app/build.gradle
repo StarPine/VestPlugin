@@ -38,13 +38,20 @@ dependencies {
 
 apply plugin: 'com.starpine.vest'
 
-vestReplace{
-    getPath()
-    needRenamePath 'E:\\Develop_WS\\Tools\\VestPlugin\\app\\src'
-    renameFilePath 'E:\\Develop_WS\\Tools\\VestPlugin\\app\\fl-rename.txt'
-    renameMapping 'E:\\Develop_WS\\Tools\\VestPlugin\\app\\fl-rename-mapping.txt'
-}
+//def curpath = projectDir
+//vestReplace{
+//
+//
+//    needRenamePath "$curpath\\src"
+//    renameFilePath "$curpath\\fl-rename.txt"
+//    renameMapping "$curpath\\fl-rename-mapping.txt"
+//}
 
 task forpath(){
+    doLast {
 
+
+        def s = new String(projectDir.path + File.separator + "ff")
+        println s
+    }
 }
