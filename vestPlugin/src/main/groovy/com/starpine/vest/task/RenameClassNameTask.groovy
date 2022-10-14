@@ -14,19 +14,19 @@ import org.gradle.api.tasks.TaskAction
  * @Author： liaosf
  * @Date ：2022/10/12 16:47
  */
-class ReplaceClassNameTask extends DefaultTask {
+class RenameClassNameTask extends DefaultTask {
     def needRenamePath
     def renameFilePath
     def renameMapping
     Project project
 
-    ReplaceClassNameTask() {
-        group = "vest replace"
+    RenameClassNameTask() {
+        group = "vest rename"
     }
 
     void init(VestInfo vestInfo, Project pro) {
-        needRenamePath = vestInfo.needRenamePath
-        renameFilePath = vestInfo.renameFilePath
+        needRenamePath = vestInfo.targetClassPath
+        renameFilePath = vestInfo.renameFile
         renameMapping = vestInfo.renameMapping
         project = pro
     }

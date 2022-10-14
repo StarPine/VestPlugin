@@ -1,4 +1,4 @@
-apply plugin:'com.android.application'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 31
@@ -28,7 +28,7 @@ android {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.+'
@@ -38,16 +38,19 @@ dependencies {
 
 apply plugin: 'com.starpine.vest'
 
-//def curpath = projectDir
-//vestReplace{
-//
-//
-//    needRenamePath "$curpath\\src"
-//    renameFilePath "$curpath\\fl-rename.txt"
-//    renameMapping "$curpath\\fl-rename-mapping.txt"
-//}
+vestRename {
+    strPath "../app"
+    renameFile "$projectDir/fl-rename.txt"
+    renameMapping "$projectDir/fl-rename-mapping.txt"
+    targetClassPath "$projectDir/src"
+    targetDirPath "$projectDir/src/main/java/com/starpine/vestplugin"
+    newDirText "piup"
+}
+ext {
+    def index = 2
+}
 
-task forpath(){
+task forpath() {
     doLast {
 
 

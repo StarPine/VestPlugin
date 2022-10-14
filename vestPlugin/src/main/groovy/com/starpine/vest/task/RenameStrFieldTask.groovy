@@ -4,7 +4,8 @@ import com.starpine.vest.bean.VestInfo
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.TaskAction
+import org.gradle.internal.component.model.Exclude;
 
 /**
  * 描述：多语言字段批量修改
@@ -14,13 +15,13 @@ import org.gradle.api.tasks.TaskAction;
  * @Author： liaosf
  * @Date： 2022/10/13 10:57
  */
-class ReplaceStrFieldTask extends DefaultTask{
+class RenameStrFieldTask extends DefaultTask{
 
     Project project
     VestInfo vestInfo
 
-    ReplaceStrFieldTask() {
-        group = "vest replace"
+    RenameStrFieldTask() {
+        group = "vest rename"
     }
 
     void init(VestInfo vestInfo, Project project) {
@@ -29,9 +30,23 @@ class ReplaceStrFieldTask extends DefaultTask{
     }
 
     @TaskAction
-    def replaceStrField(){
-        String strPath = "E:\\Develop_WS\\DL_Work\\Friendly_CC\\lib-src\\src\\main\\res\\values\\strings.xml"
-        File renameStringsFile = new File(strPath)
+    def test(){
+        FileTree fileTree = project.fileTree(vestInfo.strPath){
+            include '**/values/strings.xml'
+            include '**/**.java'
+            exclude '**/build'
+            exclude '**/androidTest'
+            exclude '**/test'
+        }
+        fileTree.each {
+            println(it.path)
+            replaceStrField(it.path)
+        }
+    }
+
+//    @TaskAction
+    def replaceStrField(filePath){
+        File mainFile = new File(filePath)
         List<String> renameWord = renameStringsFile.readLines()
 
         File renameFile = new File(strRenameFilePath)
