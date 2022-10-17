@@ -1,7 +1,5 @@
 package com.starpine.vest.bean
 
-import org.gradle.api.Action
-import org.gradle.util.ConfigureUtil;
 
 /**
  * 描述：
@@ -12,16 +10,23 @@ import org.gradle.util.ConfigureUtil;
  * @Date： 2022/10/12 16:35
  */
 class VestInfo {
+    //需要生成的混淆字典的数量
+    int guardWordAmount
+    //需要生成的混淆字典的规则字段
+    String guardWord
+    //需要生成的混淆字典文件名
+    String finallyGuardWordFile
+    //混淆字典文件
+    String obfuscationdictionary
+    //类混淆字典文件
+    String classobfuscationdictionary
+    //包混淆字典文件
+    String packageobfuscationdictionary
     //目标类文件
-    String targetClassPath
-    //换名混淆字典文件
-    String renameFile
-    //换名映射文件
-    String renameMapping
-    //目标多语言文件
-    String strPath
+    String sourceClassPath
     //目标文件夹
-    String targetDirPath
-    String newDirText
+    String sourceDirPath
+    //新文件夹基准单词
+    String newDirWord
 
 }

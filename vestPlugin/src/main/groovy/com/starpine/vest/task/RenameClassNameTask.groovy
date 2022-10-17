@@ -1,6 +1,7 @@
 package com.starpine.vest.task
 
 import com.starpine.vest.bean.VestInfo
+import com.starpine.vest.utils.GuardWordUtils
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
@@ -11,31 +12,48 @@ import org.gradle.api.tasks.TaskAction
  *
  * @Name ：VestPlugin
  * @Description ：
- * @Author： liaosf
- * @Date ：2022/10/12 16:47
+ * @Author ：liaosf* @Date ：2022/10/12 16:47
  */
 class RenameClassNameTask extends DefaultTask {
     def needRenamePath
-    def renameFilePath
+    def guardFilePath
     def renameMapping
     Project project
+    VestInfo vestInfo
 
     RenameClassNameTask() {
-        group = "vest rename"
+        group = "vest guard"
     }
 
-    void init(VestInfo vestInfo, Project pro) {
-        needRenamePath = vestInfo.targetClassPath
-        renameFilePath = vestInfo.renameFile
-        renameMapping = vestInfo.renameMapping
-        project = pro
+    void init(VestInfo vestInfo, Project project) {
+        needRenamePath = vestInfo.sourceClassPath
+        this.project = project
+        this.vestInfo = vestInfo
     }
 
     @TaskAction
     void replaceClassName() {
-        def renameString = ""
-        File renameFile = new File(renameFilePath)
-        List<String> renameWord = renameFile.readLines()
+
+        GuardWordUtils guardWordUtils = new GuardWordUtils()
+        if (vestInfo.classobfuscationdictionary == null) {
+            def finallyGuard = guardWordUtils.generateGuardWord(vestInfo, project)
+            guardFilePath = finallyGuard
+        } else {
+            guardFilePath = project.projectDir.path + File.separator + vestInfo.classobfuscationdictionary
+        }
+        def renameMappingDir = project.getProjectDir().path + File.separator + "vest_mapping/"
+        renameMapping = renameMappingDir + "class-name-mapping.txt"
+        File mappingDir = new File(renameMappingDir)
+        if (!mappingDir.exists()) {
+            mappingDir.mkdir()
+        }
+
+        def mappingString = ""
+        File guardFile = new File(guardFilePath)
+        if (!guardFile.exists()) {
+            guardWordUtils.generateGuardWord(vestInfo, project, vestInfo.classobfuscationdictionary)
+        }
+        List<String> renameWord = guardFile.readLines()
         int index = 0
         FileTree sourceTree = project.fileTree(needRenamePath) {
             include '**/*.java'
@@ -62,8 +80,8 @@ class RenameClassNameTask extends DefaultTask {
                     }
                 }
             }
-            renameString <<= packageName.replaceAll("package ", "").replaceAll(";", ".") + sourceName + " -> $targetName"
-            renameString << "\n"
+            mappingString <<= packageName.replaceAll("package ", "").replaceAll(";", ".") + sourceName + " -> $targetName"
+            mappingString << "\n"
             sourceFile.renameTo(sourceFile.parentFile.path + File.separator + targetName + fileSuffix)
 
             //生成一个文件树,替换import后面的路径
@@ -83,7 +101,7 @@ class RenameClassNameTask extends DefaultTask {
 
         project.file(renameMapping).withWriter('UTF-8') {
             writer ->
-                writer.append(renameString)
+                writer.append(mappingString)
         }
     }
 

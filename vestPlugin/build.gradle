@@ -12,8 +12,8 @@ publishing{
     publications{
         VestReplace(MavenPublication){
             from components.java
-            groupId 'com.starpine' // groupId
-            artifactId 'vest' // artifactId
+            groupId 'com.starpine.plugins' // groupId
+            artifactId 'vestguard' // artifactId
             version '1.0.0' // 发布版本
         }
     }

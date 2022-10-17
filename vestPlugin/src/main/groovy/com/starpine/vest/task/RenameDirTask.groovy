@@ -18,11 +18,13 @@ class RenameDirTask extends DefaultTask{
 
     Project project
     VestInfo vestInfo
-    def index = 1
+    def index = 0
     String finallyName = "aaa"
+    def renameMapping
+    def mappingString = ""
 
     RenameDirTask() {
-        group = "vest rename"
+        group = "vest guard"
     }
 
     void init(VestInfo vestInfo, Project project) {
@@ -32,11 +34,23 @@ class RenameDirTask extends DefaultTask{
 
     @TaskAction
     def startRenameDir(){
-        if (vestInfo.newDirText != null){
-            finallyName = vestInfo.newDirText
+        def renameMappingDir = project.getProjectDir().path + File.separator + "vest_mapping/"
+        renameMapping = renameMappingDir + "dir-name-mapping.txt"
+        File mappingDir = new File(renameMappingDir)
+        if(!mappingDir.exists()){
+            mappingDir.mkdir()
         }
-        File file = new File(vestInfo.targetDirPath)
+
+        if (vestInfo.newDirWord != null){
+            finallyName = vestInfo.newDirWord
+        }
+        File file = new File(vestInfo.sourceDirPath)
         renameDirName(file, false)
+
+        project.file(renameMapping).withWriter('UTF-8') {
+            writer ->
+                writer.append(mappingString)
+        }
     }
 
     def renameDirName(file, isRename) {
@@ -50,6 +64,8 @@ class RenameDirTask extends DefaultTask{
                 def targetName = "$finallyName$index"
                 String targetPackage = sourcePackage.replace(dirName,targetName)
                 def newFileName = file.parent + File.separator + targetName
+                mappingString <<= "$sourcePackage -> $targetPackage"
+                mappingString << "\n"
                 println file.renameTo(newFileName)
                 file = new File(newFileName)
 

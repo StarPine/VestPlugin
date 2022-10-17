@@ -20,7 +20,7 @@ class AllSourceRenameTask extends DefaultTask{
     VestInfo vestInfo
 
     AllSourceRenameTask() {
-        group = "vest rename"
+        group = "vest guard"
     }
 
     void init(VestInfo vestInfo, Project project) {

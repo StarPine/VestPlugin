@@ -38,23 +38,18 @@ dependencies {
 
 apply plugin: 'com.starpine.vest'
 
-vestRename {
-    strPath "../app"
-    renameFile "$projectDir/fl-rename.txt"
-    renameMapping "$projectDir/fl-rename-mapping.txt"
-    targetClassPath "$projectDir/src"
-    targetDirPath "$projectDir/src/main/java/com/starpine/vestplugin"
-    newDirText "piup"
-}
-ext {
-    def index = 2
+vestGuard {
+    guardWord "hdfha"
+//    finallyGuardWordFile "fl-guard.txt"
+//    obfuscationdictionary "fl-guard.txt"
+    classobfuscationdictionary "fl-guard.txt"
+    sourceClassPath "$projectDir/src"
+    sourceDirPath "$projectDir/src/main/java/com/starpine/vestplugin"
+    newDirWord "piup"
 }
 
 task forpath() {
     doLast {
-
-
-        def s = new String(projectDir.path + File.separator + "ff")
-        println s
+        println         project.getRootDir().name
     }
 }

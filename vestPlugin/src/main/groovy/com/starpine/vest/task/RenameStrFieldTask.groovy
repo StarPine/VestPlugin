@@ -1,27 +1,30 @@
 package com.starpine.vest.task
 
+import com.starpine.vest.bean.StringsInfo
 import com.starpine.vest.bean.VestInfo
+import com.starpine.vest.utils.GuardWordUtils
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction
-import org.gradle.internal.component.model.Exclude;
 
 /**
  * 描述：多语言字段批量修改
  *
- * @Name： VestPlugin
- * @Description：
+ * @Name ：VestPlugin* @Description ：
  * @Author： liaosf
- * @Date： 2022/10/13 10:57
+ * @Date ：2022/10/13 10:57
  */
-class RenameStrFieldTask extends DefaultTask{
+class RenameStrFieldTask extends DefaultTask {
 
     Project project
     VestInfo vestInfo
+    def renameMapping
+    def guardFilePath
+    def mappingString = ""
 
     RenameStrFieldTask() {
-        group = "vest rename"
+        group = "vest guard"
     }
 
     void init(VestInfo vestInfo, Project project) {
@@ -30,111 +33,118 @@ class RenameStrFieldTask extends DefaultTask{
     }
 
     @TaskAction
-    def test(){
-        FileTree fileTree = project.fileTree(vestInfo.strPath){
+    def start() {
+        GuardWordUtils guardWordUtils = new GuardWordUtils()
+        if (vestInfo.obfuscationdictionary == null) {
+            def finallyGuard = guardWordUtils.generateGuardWord(vestInfo, project)
+            guardFilePath = finallyGuard
+        } else {
+            guardFilePath = project.projectDir.path + File.separator + vestInfo.obfuscationdictionary
+        }
+        def renameMappingDir = project.getProjectDir().path + File.separator + "vest_mapping/"
+        renameMapping = renameMappingDir + "strings-name-mapping.txt"
+        File mappingDir = new File(renameMappingDir)
+        if (!mappingDir.exists()) {
+            mappingDir.mkdir()
+        }
+
+        FileTree sourceFileTree = project.fileTree("../") {
             include '**/values/strings.xml'
-            include '**/**.java'
             exclude '**/build'
             exclude '**/androidTest'
             exclude '**/test'
         }
-        fileTree.each {
+
+        sourceFileTree.each {
             println(it.path)
-            replaceStrField(it.path)
+            replaceStrField(it.path, guardWordUtils)
+        }
+
+        project.file(renameMapping).withWriter('UTF-8') {
+            writer ->
+                writer.append(mappingString)
         }
     }
 
-//    @TaskAction
-    def replaceStrField(filePath){
-        File mainFile = new File(filePath)
-        List<String> renameWord = renameStringsFile.readLines()
+    def replaceStrField(sourceFilePath, guardWordUtils) {
+        //基准文件
+        File sourceFile = new File(sourceFilePath)
+        List<String> sourceWordList = sourceFile.readLines()
+        def srcModuleName = sourceFilePath.replaceAll(".*$project.rootDir.name\\\\", "")
+                .replaceAll("\\\\src.*", "")
 
-        File renameFile = new File(strRenameFilePath)
-        List<String> strWord = renameFile.readLines()
 
-        //初始化语言包内容
-        String defStrings = ""
-        String zhStrings = ""
-        String ruStrings = ""
-        String trStrings = ""
-        FileTree stringsTree = fileTree("../lib-src") {
+        //混淆文件
+        File guardFile = new File(guardFilePath)
+        if (!guardFile.exists()) {
+            guardWordUtils.generateGuardWord(vestInfo, project, vestInfo.obfuscationdictionary)
+        }
+        List<String> renameStrWord = guardFile.readLines()
+
+        List<StringsInfo> stringsFileList = new ArrayList<>()
+
+        FileTree stringsTree = project.fileTree("../") {
             include '**/strings.xml'
         }
         stringsTree.each {
-            List<String> strContent = it.readLines()
-            String content = strContent.toString()
             String path = it.getPath()
-            if (path.find("values\\\\")) {
-                defStrings = content
-            } else if (path.find("values-ru\\\\")) {
-                ruStrings = content
-            } else if (path.find("values-tr\\\\")) {
-                trStrings = content
-            } else if (path.find("values-zh\\\\")) {
-                zhStrings = content
-            }
+            File renameStringsFile = new File(path)
+            byte[] contents = renameStringsFile.bytes
+            String content = new String(contents)
+
+            def values = path.substring(path.indexOf("values"), path.length()).split("\\\\")[0]
+            def moduleName = path.replaceAll(".*$project.rootDir.name\\\\", "").replaceAll("\\\\src.*", "")
+            stringsFileList.add(new StringsInfo(values, path, content, moduleName))
+
         }
 
         int index = 0
-        renameWord.each { String lines ->
+        sourceWordList.each { String lines ->
             if (lines.find("<string name=")) {
 
-                String souStrName = lines.replaceAll(".*name=\"", "")
+                String strSrcName = lines.replaceAll(".*name=\"", "")
                         .replaceAll("\">.*", "")
-                String targetName = strWord.get(index)
+                String targetName = renameStrWord.get(index)
                 index++
-                println "$index--------$souStrName"
-
+                println "$index--------$strSrcName"
+                mappingString <<= "$strSrcName -> $targetName"
+                mappingString << "\n"
                 //替换语言包字段
-                defStrings = defStrings.replaceAll("(?<=\")$souStrName(?=\".*)", targetName)
-                ruStrings = ruStrings.replaceAll("(?<=\")$souStrName(?=\".*)", targetName)
-                trStrings = trStrings.replaceAll("(?<=\")$souStrName(?=\".*)", targetName)
-                zhStrings = zhStrings.replaceAll("(?<=\")$souStrName(?=\".*)", targetName)
+                for (i in 0..<stringsFileList.size()) {
+                    def stringsInfo = stringsFileList.get(i)
+                    stringsInfo.content = stringsInfo.content.replaceAll("(?<=\")$strSrcName(?=\".*)", targetName)
+                    stringsFileList.set(i, stringsInfo)
+                }
 
                 //替换引用了语言包的文件
-                FileTree processTree = fileTree("../") {
+                FileTree targeTree = project.fileTree("../") {
                     include '**/*.java'
                     include '**/layout/*.xml'
                     include '**/styles.xml'
                     include '**/AndroidManifest.xml'
                     exclude '**/androidTest/**'
                     exclude '**/gradle-build/**'
-                    exclude '**/lib-toast/**'
                 }
-                processTree.each { File f ->
-                    strSoureReplacer(f.path, souStrName, targetName)
+                targeTree.each { File f ->
+                    strSrcReplacer(f.path, strSrcName, targetName)
                 }
             }
         }
 
-        //重新替换语言包文件
-        stringsTree.each {
-            String content = ""
-            String path = it.getPath()
-            if (path.find("values\\\\|values-en")) {
-                content = defStrings
-            } else if (path.find("values-ru")) {
-                content = ruStrings
-            } else if (path.find("values-tr")) {
-                content = trStrings
-            } else if (path.find("values-zh")) {
-                content = zhStrings
-            }
-            content = content.replaceAll("(?<![\\w])\\[(?![\\w])", "")
-                    .replaceAll("(?<!> {0,10})\\](?!> *<)", "")
-                    .replaceAll("(?<=</resources>)\\]", "")
-                    .replaceAll("(?<=(-->)|(<resources>)|(</string>))(, )+", "\n")
-            project.file(path).withWriter('UTF-8') {
+        //重新替换语言包文件内容
+        for (i in 0..<stringsFileList.size()) {
+            def stringsInfo = stringsFileList.get(i)
+            project.file(stringsInfo.path).withWriter('UTF-8') {
                 writer ->
-                    writer.append(content)
+                    writer.append(stringsInfo.content)
             }
         }
     }
 
-    def strSoureReplacer(String filePath, sourceName, targetName) {
+    def strSrcReplacer(String filePath, sourceName, targetName) {
         def isXml = filePath.endsWith(".xml")
         def hasReplace = false
-        String targetStr = ""
+        String targetContent = ""
         File renameStringsFile = new File(filePath)
         byte[] contents = renameStringsFile.bytes
         String content = new String(contents)
@@ -143,11 +153,11 @@ class RenameStrFieldTask extends DefaultTask{
             if (isXml) {
                 content = content.replaceAll("(?<=@string/)$sourceName(?![0-9a-zA-Z_]+)", targetName)
             } else {
-                content = content.replaceAll("(?<=R\\.string\\.)$sourceName(?![0-9a-zA-Z_]+)", targetName)
+                content = content.replaceAll("(?<!android\\.)R\\.string\\.$sourceName(?![0-9a-zA-Z_]+)", "R\\.string\\.$targetName")
             }
-            targetStr <<= content
-            targetStr <<= '\n'
-            if (!content.equals(str)){
+            targetContent <<= content
+            targetContent <<= '\n'
+            if (!content.equals(str)) {
                 hasReplace = true
             }
         }
@@ -155,12 +165,12 @@ class RenameStrFieldTask extends DefaultTask{
 
         if (hasReplace) {
             println filePath
-            if (targetStr.toString().endsWith("\n")) {
-                targetStr = targetStr.subSequence(0, targetStr.length() - 1)
+            if (targetContent.toString().endsWith("\n")) {
+                targetContent = targetContent.subSequence(0, targetContent.length() - 1)
             }
             project.file(filePath).withWriter('UTF-8') {
                 writer ->
-                    writer.append(targetStr)
+                    writer.append(targetContent)
             }
         }
     }
