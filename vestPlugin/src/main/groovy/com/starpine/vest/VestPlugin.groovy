@@ -1,10 +1,14 @@
 package com.starpine.vest
 
+import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
+import com.android.build.gradle.internal.dsl.DefaultConfig
 import com.starpine.vest.bean.VestInfo
 import com.starpine.vest.task.AllSourceRenameTask
 import com.starpine.vest.task.GenerateGuardTask
-import com.starpine.vest.task.RenameDirTask
+import com.starpine.vest.task.RenameFolderTask
 import com.starpine.vest.task.RenameStrFieldTask
+import com.starpine.vest.task.TestTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project;
 import com.starpine.vest.task.RenameClassNameTask
@@ -27,6 +31,10 @@ class VestPlugin implements Plugin<Project>{
             GenerateGuardTask generateGuardTask = project.tasks.create("generateGuardWord",GenerateGuardTask)
             generateGuardTask.init(vestInfo, project)
 
+            //创建测试任务
+            TestTask testTask = project.tasks.create("testSetting", TestTask)
+            testTask.init(vestInfo, project)
+
             //创建修改类名任务
             RenameClassNameTask renameClassNameTask = project.tasks.create("renameClassName",RenameClassNameTask)
             renameClassNameTask.init(vestInfo, project)
@@ -36,7 +44,7 @@ class VestPlugin implements Plugin<Project>{
             renameStrField.init(vestInfo, project)
 
             //创建修改多语言字段任务
-            RenameDirTask renameDirTask = project.tasks.create("renameDirName", RenameDirTask)
+            RenameFolderTask renameDirTask = project.tasks.create("renameFolder", RenameFolderTask)
             renameDirTask.init(vestInfo, project)
 
             //创建一键替换所有属性任务（包含：类别，多语言字段等）

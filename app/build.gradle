@@ -39,8 +39,11 @@ dependencies {
 apply plugin: 'com.starpine.vest'
 
 vestGuard {
-    guardWord "hdfha"
-//    finallyGuardWordFile "fl-guard.txt"
+    guardConfig {
+        guardWordAmount 2000
+        guardWord "tyujg"
+        finallyGuardWordFile "fl-guard.txt"
+    }
 //    obfuscationdictionary "fl-guard.txt"
     classobfuscationdictionary "fl-guard.txt"
     sourceClassPath "$projectDir/src"
@@ -50,6 +53,40 @@ vestGuard {
 
 task forpath() {
     doLast {
-        println         project.getRootDir().name
+        def index = 0
+        FileTree sourceFileTree = fileTree("../") {
+            include '**/drawable**/**.png'
+            include '**/mipmap**/**.png'
+        }
+        sourceFileTree.each {
+            index++
+            println it.path
+            println it.name
+            def sourceName = it.name
+            def replace = it.name.replace(".png", "")
+            FileTree targetFileTree = fileTree("../") {
+                include '**/drawable**/**.png'
+                include '**/mipmap**/**.png'
+                include '**/**.java'
+                include '**/layout/*.xml'
+                include '**/AndroidManifest.xml'
+                exclude '**/androidTest/**'
+                exclude '**/test/**'
+            }
+            targetFileTree.each { file ->
+                if (file.path.endsWith(".png")) {
+                    if (file.name.equals(sourceName)) {
+                        File file1 = new File(file.path)
+                        println file1.renameTo(file1.parent + File.separator + "aaa${index}.png")
+//                        println file1.parent +File.separator+"aaa${index}.png"
+                    }
+
+                } else if (file.path.endsWith(".java")) {
+
+                } else if (file.path.endsWith(".xml")) {
+
+                }
+            }
+        }
     }
 }

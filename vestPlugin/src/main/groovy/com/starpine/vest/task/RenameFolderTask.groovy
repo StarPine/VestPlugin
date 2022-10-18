@@ -14,7 +14,7 @@ import org.gradle.api.tasks.TaskAction
  * @Author： liaosf
  * @Date： 2022/10/13 10:57
  */
-class RenameDirTask extends DefaultTask{
+class RenameFolderTask extends DefaultTask{
 
     Project project
     VestInfo vestInfo
@@ -23,7 +23,7 @@ class RenameDirTask extends DefaultTask{
     def renameMapping
     def mappingString = ""
 
-    RenameDirTask() {
+    RenameFolderTask() {
         group = "vest guard"
     }
 
@@ -34,9 +34,9 @@ class RenameDirTask extends DefaultTask{
 
     @TaskAction
     def startRenameDir(){
-        def renameMappingDir = project.getProjectDir().path + File.separator + "vest_mapping/"
-        renameMapping = renameMappingDir + "dir-name-mapping.txt"
-        File mappingDir = new File(renameMappingDir)
+        def renameMappingFolder = project.getProjectDir().path + File.separator + "vest_mapping/"
+        renameMapping = renameMappingFolder + "dir-name-mapping.txt"
+        File mappingDir = new File(renameMappingFolder)
         if(!mappingDir.exists()){
             mappingDir.mkdir()
         }

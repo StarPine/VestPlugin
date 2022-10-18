@@ -20,19 +20,19 @@ class GuardWordUtils {
         generateGuardWord(vestInfo, project, null)
     }
     def generateGuardWord(VestInfo vestInfo, Project project, String guard) {
-        if (vestInfo.finallyGuardWordFile == null) {
+        if (vestInfo.guardInfo.finallyGuardWordFile == null) {
             guardFilePath = project.projectDir.path + File.separator + "vest-guard.txt"
         } else {
-            guardFilePath = project.projectDir.path + File.separator + vestInfo.finallyGuardWordFile
+            guardFilePath = project.projectDir.path + File.separator + vestInfo.guardInfo.finallyGuardWordFile
         }
         if (guard != null) {
             guardFilePath = project.projectDir.path + File.separator + guard
         }
-        if (vestInfo.guardWord != null) {
-            data = vestInfo.guardWord
+        if (vestInfo.guardInfo.guardWord != null) {
+            data = vestInfo.guardInfo.guardWord
         }
-        if (vestInfo.guardWordAmount != 0) {
-            amount = vestInfo.guardWordAmount
+        if (vestInfo.guardInfo.guardWordAmount != 0) {
+            amount = vestInfo.guardInfo.guardWordAmount
         }
         data = data.replaceAll("[^a-zA-Z0-9,]", "")
         if (data.find(",")) {

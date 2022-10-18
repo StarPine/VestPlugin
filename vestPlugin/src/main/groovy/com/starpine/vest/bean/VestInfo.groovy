@@ -1,5 +1,8 @@
 package com.starpine.vest.bean
 
+import org.gradle.api.Action
+import org.gradle.util.ConfigureUtil
+
 
 /**
  * 描述：
@@ -10,12 +13,7 @@ package com.starpine.vest.bean
  * @Date： 2022/10/12 16:35
  */
 class VestInfo {
-    //需要生成的混淆字典的数量
-    int guardWordAmount
-    //需要生成的混淆字典的规则字段
-    String guardWord
-    //需要生成的混淆字典文件名
-    String finallyGuardWordFile
+
     //混淆字典文件
     String obfuscationdictionary
     //类混淆字典文件
@@ -28,5 +26,17 @@ class VestInfo {
     String sourceDirPath
     //新文件夹基准单词
     String newDirWord
+
+    GuardInfo guardInfo = new GuardInfo()
+
+    //创建内部Extension，名称为方法名 guard
+    void guardConfig(Action<GuardInfo> action) {
+        action.execute(guardConfig)
+    }
+
+    //创建内部Extension，名称为方法名 guard
+    void guardConfig(Closure closure) {
+        ConfigureUtil.configure(closure, guardInfo)
+    }
 
 }
