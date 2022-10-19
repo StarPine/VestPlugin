@@ -1,4 +1,0 @@
-com.starpine.vestplugin.BasicToolbarNoBack -> Gkkhkhee
-com.starpine.vestplugin.Ghegghehe -> Ghegghehe
-com.starpine.vestplugin.Gkkhkhee -> Khehhkhhkh
-com.starpine.vestplugin.Hegkge -> Hegkge
