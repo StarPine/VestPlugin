@@ -36,26 +36,27 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
-apply plugin: 'com.starpine.vest-guard'
-apply plugin: 'com.starpine.vest-junkcode'
-
-vestGuard {
-    guardConfig {
-        guardWordAmount 2000
-        guardWord "tyujg"
-        finallyGuardWordFile "fl-guard.txt"
-    }
-//    obfuscationdictionary "fl-guard.txt"
-    classobfuscationdictionary "fl-guard.txt"
-    sourceClassPath "$projectDir/src"
-    sourceDirPath "$projectDir/src/main/java/com/starpine/vestplugin"
-    newDirWord "piup"
-}
+//apply plugin: 'com.starpine.vest-guard'
+//apply plugin: 'com.starpine.vest-junkcode'
+//
+//vestGuard {
+//    guardConfig {
+//        guardWordAmount 2000
+//        guardWord "tyujg"
+//        finallyGuardWordFile "fl-guard.txt"
+//    }
+////    obfuscationdictionary "fl-guard.txt"
+//    classobfuscationdictionary "fl-guard.txt"
+//    sourceClassPath "$projectDir/src"
+//    sourceDirPath "$projectDir/src/main/java/com/starpine/vestplugin"
+//    newDirWord "piup"
+//}
 
 task forpath() {
     doLast {
@@ -103,20 +104,20 @@ task ddd{
     }
 }
 
-//apply plugin: 'android-junk-code'
-//
-//androidJunkCode {
-//    variantConfig {
-//        debug {//变体名称，如果没有设置productFlavors就是buildType名称，如果有设置productFlavors就是flavor+buildType，例如（freeRelease、proRelease）
-//            packageBase = "cn.hx.plugin.ui"  //生成java类根包名
-//            packageCount = 30 //生成包数量
-//            activityCountPerPackage = 3 //每个包下生成Activity类数量
-//            excludeActivityJavaFile = false //是否排除生成Activity的Java文件,默认false(layout和写入AndroidManifest.xml还会执行)，主要用于处理类似神策全埋点编译过慢问题
-//            otherCountPerPackage = 50  //每个包下生成其它类的数量
-//            methodCountPerClass = 20  //每个类下生成方法数量
-//            resPrefix = "junk_"  //生成的layout、drawable、string等资源名前缀
-//            drawableCount = 300  //生成drawable资源数量
-//            stringCount = 300  //生成string数量
-//        }
-//    }
-//}
+apply plugin: 'android-junk-code'
+
+androidJunkCode {
+    variantConfig {
+        debug {//变体名称，如果没有设置productFlavors就是buildType名称，如果有设置productFlavors就是flavor+buildType，例如（freeRelease、proRelease）
+            packageBase = "cn.hx.plugin.ui"  //生成java类根包名
+            packageCount = 30 //生成包数量
+            activityCountPerPackage = 3 //每个包下生成Activity类数量
+            excludeActivityJavaFile = false //是否排除生成Activity的Java文件,默认false(layout和写入AndroidManifest.xml还会执行)，主要用于处理类似神策全埋点编译过慢问题
+            otherCountPerPackage = 50  //每个包下生成其它类的数量
+            methodCountPerClass = 20  //每个类下生成方法数量
+            resPrefix = "junk_"  //生成的layout、drawable、string等资源名前缀
+            drawableCount = 300  //生成drawable资源数量
+            stringCount = 300  //生成string数量
+        }
+    }
+}
