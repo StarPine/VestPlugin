@@ -1,18 +1,11 @@
 package com.starpine.vest.tasks
 
-import com.android.build.gradle.FeaturePlugin
 import com.android.build.gradle.ProguardFiles
-import com.android.build.gradle.ReportingPlugin
-import com.android.build.gradle.TestPlugin
-import com.google.common.io.Resources
-import com.starpine.vest.Jiang
-import com.starpine.vest.JunkCodePlugin
 import com.starpine.vest.bean.VestGuardInfo
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * 描述：仅测试打印日志使用
