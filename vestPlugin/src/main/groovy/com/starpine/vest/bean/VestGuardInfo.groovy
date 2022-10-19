@@ -12,7 +12,7 @@ import org.gradle.util.ConfigureUtil
  * @Author： liaosf
  * @Date： 2022/10/12 16:35
  */
-class VestInfo {
+class VestGuardInfo {
 
     //混淆字典文件
     String obfuscationdictionary

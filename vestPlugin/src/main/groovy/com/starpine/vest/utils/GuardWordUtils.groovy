@@ -1,7 +1,7 @@
 package com.starpine.vest.utils
 
 
-import com.starpine.vest.bean.VestInfo
+import com.starpine.vest.bean.VestGuardInfo
 import org.gradle.api.Project
 
 /**
@@ -16,10 +16,10 @@ class GuardWordUtils {
     def guardFilePath = ""
     def arrayList
     def amount = 5000
-    def generateGuardWord(VestInfo vestInfo, Project project) {
+    def generateGuardWord(VestGuardInfo vestInfo, Project project) {
         generateGuardWord(vestInfo, project, null)
     }
-    def generateGuardWord(VestInfo vestInfo, Project project, String guard) {
+    def generateGuardWord(VestGuardInfo vestInfo, Project project, String guard) {
         if (vestInfo.guardInfo.finallyGuardWordFile == null) {
             guardFilePath = project.projectDir.path + File.separator + "vest-guard.txt"
         } else {

@@ -1,7 +1,7 @@
-package com.starpine.vest.task
+package com.starpine.vest.tasks
 
 import com.starpine.vest.bean.StringsInfo
-import com.starpine.vest.bean.VestInfo
+import com.starpine.vest.bean.VestGuardInfo
 import com.starpine.vest.utils.GuardWordUtils
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
@@ -18,7 +18,7 @@ import org.gradle.api.tasks.TaskAction
 class RenameStrFieldTask extends DefaultTask {
 
     Project project
-    VestInfo vestInfo
+    VestGuardInfo vestInfo
     def renameMapping
     def guardFilePath
     def mappingString = ""
@@ -27,7 +27,7 @@ class RenameStrFieldTask extends DefaultTask {
         group = "vest guard"
     }
 
-    void init(VestInfo vestInfo, Project project) {
+    void init(VestGuardInfo vestInfo, Project project) {
         this.vestInfo = vestInfo
         this.project = project
     }

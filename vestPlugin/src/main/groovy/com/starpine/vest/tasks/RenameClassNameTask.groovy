@@ -1,6 +1,6 @@
-package com.starpine.vest.task
+package com.starpine.vest.tasks
 
-import com.starpine.vest.bean.VestInfo
+import com.starpine.vest.bean.VestGuardInfo
 import com.starpine.vest.utils.GuardWordUtils
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
@@ -19,13 +19,13 @@ class RenameClassNameTask extends DefaultTask {
     def guardFilePath
     def renameMapping
     Project project
-    VestInfo vestInfo
+    VestGuardInfo vestInfo
 
     RenameClassNameTask() {
         group = "vest guard"
     }
 
-    void init(VestInfo vestInfo, Project project) {
+    void init(VestGuardInfo vestInfo, Project project) {
         needRenamePath = vestInfo.sourceClassPath
         this.project = project
         this.vestInfo = vestInfo

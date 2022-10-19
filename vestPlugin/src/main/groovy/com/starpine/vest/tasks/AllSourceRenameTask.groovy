@@ -1,9 +1,8 @@
-package com.starpine.vest.task
+package com.starpine.vest.tasks
 
-import com.starpine.vest.bean.VestInfo
+import com.starpine.vest.bean.VestGuardInfo
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
-import org.gradle.api.file.FileTree
 import org.gradle.api.tasks.TaskAction;
 
 /**
@@ -17,13 +16,13 @@ import org.gradle.api.tasks.TaskAction;
 class AllSourceRenameTask extends DefaultTask{
 
     Project project
-    VestInfo vestInfo
+    VestGuardInfo vestInfo
 
     AllSourceRenameTask() {
         group = "vest guard"
     }
 
-    void init(VestInfo vestInfo, Project project) {
+    void init(VestGuardInfo vestInfo, Project project) {
         this.vestInfo = vestInfo
         this.project = project
     }

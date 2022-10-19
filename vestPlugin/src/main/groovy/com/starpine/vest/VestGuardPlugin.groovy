@@ -1,17 +1,15 @@
 package com.starpine.vest
 
-import com.android.build.gradle.AppPlugin
-import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
-import com.android.build.gradle.internal.dsl.DefaultConfig
-import com.starpine.vest.bean.VestInfo
-import com.starpine.vest.task.AllSourceRenameTask
-import com.starpine.vest.task.GenerateGuardTask
-import com.starpine.vest.task.RenameFolderTask
-import com.starpine.vest.task.RenameStrFieldTask
-import com.starpine.vest.task.TestTask
+
+import com.starpine.vest.bean.VestGuardInfo
+import com.starpine.vest.tasks.AllSourceRenameTask
+import com.starpine.vest.tasks.GenerateGuardTask
+import com.starpine.vest.tasks.RenameFolderTask
+import com.starpine.vest.tasks.RenameStrFieldTask
+import com.starpine.vest.tasks.TestTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project;
-import com.starpine.vest.task.RenameClassNameTask
+import com.starpine.vest.tasks.RenameClassNameTask
 
 /**
  * 描述：
@@ -21,11 +19,11 @@ import com.starpine.vest.task.RenameClassNameTask
  * @Author： liaosf
  * @Date： 2022/10/12 16:15
  */
-class VestPlugin implements Plugin<Project>{
+class VestGuardPlugin implements Plugin<Project>{
     public final String vestRename = "vestGuard"
     @Override
     void apply(Project project) {
-        VestInfo vestInfo = project.getExtensions().create(vestRename , VestInfo)
+        VestGuardInfo vestInfo = project.getExtensions().create(vestRename , VestGuardInfo)
         project.afterEvaluate {
             //创建生成混淆字典文件任务
             GenerateGuardTask generateGuardTask = project.tasks.create("generateGuardWord",GenerateGuardTask)

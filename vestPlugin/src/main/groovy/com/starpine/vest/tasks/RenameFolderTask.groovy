@@ -1,6 +1,6 @@
-package com.starpine.vest.task
+package com.starpine.vest.tasks
 
-import com.starpine.vest.bean.VestInfo
+import com.starpine.vest.bean.VestGuardInfo
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.file.FileTree
@@ -17,7 +17,7 @@ import org.gradle.api.tasks.TaskAction
 class RenameFolderTask extends DefaultTask{
 
     Project project
-    VestInfo vestInfo
+    VestGuardInfo vestInfo
     def index = 0
     String finallyName = "aaa"
     def renameMapping
@@ -27,7 +27,7 @@ class RenameFolderTask extends DefaultTask{
         group = "vest guard"
     }
 
-    void init(VestInfo vestInfo, Project project) {
+    void init(VestGuardInfo vestInfo, Project project) {
         this.vestInfo = vestInfo
         this.project = project
     }
