@@ -10,23 +10,23 @@ dependencies {
     implementation "com.android.tools.build:gradle:4.2.0"
 }
 
-publishing{
-    publications{
-        VestReplace(MavenPublication){
-            from components.java
-            groupId 'com.starpine.plugins' // groupId
-            artifactId 'vestguard' // artifactId
-            version '1.0.0' // 发布版本
-        }
-//        release(MavenPublication) {
-//            from components.release
-//
-//            groupId = 'com.github.StarPine'
-//            artifactId = 'VestPlugin'
-//            version = '1.0.0'
+//publishing{
+//    publications{
+//        VestReplace(MavenPublication){
+//            from components.java
+//            groupId 'com.starpine.plugins' // groupId
+//            artifactId 'vestguard' // artifactId
+//            version '1.0.0' // 发布版本
 //        }
-    }
-}
+////        release(MavenPublication) {
+////            from components.release
+////
+////            groupId = 'com.github.StarPine'
+////            artifactId = 'VestPlugin'
+////            version = '1.0.0'
+////        }
+//    }
+//}
 
 allprojects {
     repositories {
