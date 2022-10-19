@@ -1,6 +1,6 @@
 plugins {
     id 'groovy'
-    id 'maven'
+    //id 'maven'
     id 'maven-publish'
     id 'com.github.dcendents.android-maven'
 }
